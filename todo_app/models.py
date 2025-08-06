@@ -2,7 +2,8 @@ from django.db import models
 
 # Create your models here.
 class task(models.Model):
-    task = models.CharField(max_length=200)
+
+    task = models.CharField(max_length=255, blank=False, null=False)
     completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
