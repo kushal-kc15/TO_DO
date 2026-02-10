@@ -21,87 +21,395 @@
     <!-- Font Awesome Icons -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-      .form-control {
-        padding: 1.375rem 0.75rem !important;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px 0;
+      }
+
+      .main-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        margin-bottom: 5px;
+      }
+
+      .header .date {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .content-wrapper {
+        display: flex;
+        gap: 25px;
+        flex-wrap: wrap;
+      }
+
+      .tasks-section {
+        flex: 1;
+        min-width: 300px;
+      }
+
+      .section-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        height: fit-content;
+      }
+
+      .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-title i {
+        color: #667eea;
+      }
+
+      .task-count {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-size: 0.8rem;
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-left: auto;
+      }
+
+      .tasks-list {
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 5px;
+      }
+
+      .tasks-list::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .tasks-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .tasks-list::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+      }
+
+      .task-card {
+        background: linear-gradient(145deg, #f8f9fa, #ffffff);
+        border: 1px solid #e9ecef;
+        border-radius: 12px;
+        padding: 15px 18px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s ease;
+        gap: 15px;
+      }
+
+      .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        border-color: #667eea;
+      }
+
+      .task-text {
+        flex: 1;
+        font-size: 0.95rem;
+        color: #444;
+        word-break: break-word;
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .btn-action {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+      }
+
+      .btn-complete {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+      }
+
+      .btn-complete:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4);
+        color: white;
+      }
+
+      .btn-edit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-edit:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        color: white;
+      }
+
+      .btn-delete {
+        background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+        color: white;
+      }
+
+      .btn-delete:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(244, 92, 67, 0.4);
+        color: white;
+      }
+
+      .btn-undo {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+      }
+
+      .btn-undo:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        color: white;
+      }
+
+      .completed-section .task-card {
+        background: linear-gradient(145deg, #f0fff4, #ffffff);
+        border-color: #c6f6d5;
+      }
+
+      .completed-section .task-text {
+        text-decoration: line-through;
+        color: #888;
+      }
+
+      .add-task-section {
+        margin-top: 25px;
+      }
+
+      .add-task-form {
+        display: flex;
+        gap: 12px;
+      }
+
+      .add-task-input {
+        flex: 1;
+        padding: 15px 20px;
+        border: 2px solid #e9ecef;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      .add-task-input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      }
+
+      .add-task-input::placeholder {
+        color: #aaa;
+      }
+
+      .btn-add {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      .btn-add:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #aaa;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+      }
+
+      .empty-state p {
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 1.8rem;
+        }
+
+        .content-wrapper {
+          flex-direction: column;
+        }
+
+        .add-task-form {
+          flex-direction: column;
+        }
+
+        .btn-add {
+          justify-content: center;
+        }
+
+        .task-card {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .task-actions {
+          width: 100%;
+          justify-content: flex-end;
+          margin-top: 10px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h3 class="pt-5 text-center">Django ToDo App</h3>
-      <div class="row">
-        <h4>My Day</h4>
-        <p class="text-muted">{% now "jS F Y" %}</p>
-        <div class="col-md-7 col-lg-7" style="height: 450px; overflow: scroll">
-          <!-- List of all the tasks for the day -->
-          {% for task in tasks %}
-          <div class="card m-1">
-            <div class="card-body">
-              {{ task.task }}
-              <span style="position: relative; float: right">
-                <a
-                  href="{% url 'complete_task' task.id %}"
-                  class="btn btn-success"
-                  ><i class="fa fa-check"></i> Mark as Done</a
-                >
-                <a href="{% url 'delete_task' task.id %}" class="btn btn-danger"
-                  ><i class="fa fa-trash"></i
-                ></a>
-                <a href="{% url 'update_task' task.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
-              </span>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
-        <div class="col-md-5 col-lg-5">
-          <h5>Completed Tasks</h5>
-          <!-- List of all the tasks that have completed -->
-          {% for task in completed_tasks %}
-          <div class="card m-1">
-            <div class="card-body">
-              {{ task.task }}
-              <span style="position: relative; float: right">
-                <a
-                  href="{% url 'undone_task' task.id %}"
-                  class="btn btn-success"
-                  ><i class="fa fa-check"></i> Mark as undone</a
-                >
-              </span>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
+    <div class="main-container">
+      <div class="header">
+        <h1><i class="fas fa-clipboard-list"></i> My Todo</h1>
+        <p class="date">{% now "l, jS F Y" %}</p>
       </div>
-      <div class="row">
-        <div
-          class="col-md-6 col-lg-6 p-0"
-          style="position: absolute; bottom: 50px"
-        >
-          <!-- To Do Form -->
-          <form action="{% url 'add_task' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-              <span style="display: flex">
+
+      <div class="content-wrapper">
+        <!-- Active Tasks Section -->
+        <div class="tasks-section">
+          <div class="section-card">
+            <h2 class="section-title">
+              <i class="fas fa-tasks"></i> My Tasks
+              <span class="task-count">{{ tasks|length }}</span>
+            </h2>
+            
+            <div class="tasks-list">
+              {% if tasks %}
+                {% for task in tasks %}
+                <div class="task-card">
+                  <span class="task-text">{{ task.task }}</span>
+                  <div class="task-actions">
+                    <a href="{% url 'complete_task' task.id %}" class="btn-action btn-complete" title="Mark as Done">
+                      <i class="fas fa-check"></i>
+                    </a>
+                    <a href="{% url 'update_task' task.id %}" class="btn-action btn-edit" title="Edit">
+                      <i class="fas fa-pen"></i>
+                    </a>
+                    <a href="{% url 'delete_task' task.id %}" class="btn-action btn-delete" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+                {% endfor %}
+              {% else %}
+                <div class="empty-state">
+                  <i class="fas fa-inbox"></i>
+                  <p>No tasks yet. Add your first task below!</p>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Add Task Form -->
+            <div class="add-task-section">
+              <form action="{% url 'add_task' %}" method="POST" class="add-task-form">
+                {% csrf_token %}
                 <input
                   type="text"
-                  class="form-control"
-                  placeholder="Add a task"
+                  class="add-task-input"
+                  placeholder="What needs to be done?"
                   name="task"
+                  required
                 />
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  style="width: 200px"
-                >
-                  <i class="fa fa-plus"></i> Add
+                <button type="submit" class="btn-add">
+                  <i class="fas fa-plus"></i> Add Task
                 </button>
-              </span>
+              </form>
             </div>
-          </form>
+          </div>
+        </div>
+
+        <!-- Completed Tasks Section -->
+        <div class="tasks-section completed-section">
+          <div class="section-card">
+            <h2 class="section-title">
+              <i class="fas fa-check-circle"></i> Completed
+              <span class="task-count">{{ completed_tasks|length }}</span>
+            </h2>
+            
+            <div class="tasks-list">
+              {% if completed_tasks %}
+                {% for task in completed_tasks %}
+                <div class="task-card">
+                  <span class="task-text">{{ task.task }}</span>
+                  <div class="task-actions">
+                    <a href="{% url 'undone_task' task.id %}" class="btn-action btn-undo" title="Mark as Undone">
+                      <i class="fas fa-undo"></i>
+                    </a>
+                  </div>
+                </div>
+                {% endfor %}
+              {% else %}
+                <div class="empty-state">
+                  <i class="fas fa-trophy"></i>
+                  <p>No completed tasks yet. Get to work!</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
         </div>
       </div>
     </div>
